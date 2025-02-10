@@ -10,7 +10,7 @@ router = APIRouter(
 @router.get("/{verse_number}")
 def get_verse(verse_number: int):
     return {
-        "verse_number": verse_number,
+        "verse_number": 1,
         "sanskrit": "धर्मक्षेत्रे कुरुक्षेत्रे...",
         "translation": "In the field of dharma, Kurukshetra...",
         "explanation": "This verse sets the stage for the Gita."
