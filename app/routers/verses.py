@@ -13,6 +13,6 @@ router = APIRouter(
 async def get_all_verses(db: AsyncSession = Depends(get_db)):
     return await crud.get_chapters(db)
 
-@router.get("/chapter/{chapter_id}")
-async def get_verses(chapter_id: int, db: AsyncSession = Depends(get_db)):
+@router.get("/chapter/{chapter_number}")
+async def get_verses(chapter_number: int, db: AsyncSession = Depends(get_db)):
     return await crud.get_verses_by_chapter(db)
