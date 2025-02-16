@@ -1,1 +1,0 @@
-# This file Defines database models when PostgreSQL is set up.

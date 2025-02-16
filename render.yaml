@@ -1,8 +1,0 @@
-# This file has Deployment configuration for Render
-services:
-  - type: web
-    name: songofLordAPI
-    env: python
-    buildCommand: "pip install -r requirements.txt"
-    startCommand: "uvicorn app.main:app --host 0.0.0.0 --port 10000"
-    plan: free
