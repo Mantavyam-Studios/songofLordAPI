@@ -1,5 +1,5 @@
 import enum
-from sqlalchemy import Column, Integer, String, Text, ForeignKey, Enum
+from sqlalchemy import Column, Integer, String, Text, ForeignKey, ForeignKeyConstraint, Enum
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
 
@@ -21,16 +21,20 @@ class Chapter(Base):
 class Verse(Base):
     __tablename__ = "verses"
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    chapter_number = Column(Integer, nullable=False)  # Chapter Number (Foreign Key)
-    language = Column(Enum(LanguageEnum), nullable=False)  # Language column
+    chapter_number = Column(Integer, nullable=False)  # Part of composite FK
+    language = Column(Enum(LanguageEnum), nullable=False)  # Part of composite FK
     number = Column(Integer, nullable=False)  # Verse Number
     sanskrit_shloka = Column(Text, nullable=False)
     transliteration = Column(Text, nullable=False)
     translation = Column(Text, nullable=False)
     commentary = Column(Text, nullable=True)
     
-    # Foreign key to match both chapter_number and language
-    chapter = relationship("Chapter", back_populates="verses")
     __table_args__ = (
-        ForeignKey("chapters.number", ondelete="CASCADE"),
+        ForeignKeyConstraint(
+            ['chapter_number', 'language'],
+            ['chapters.number', 'chapters.language'],
+            ondelete="CASCADE"
+        ),
     )
+    
+    chapter = relationship("Chapter", back_populates="verses")
