@@ -1,11 +1,13 @@
-# This file Creates Pydantic models for data validation
-# app/schemas.py
-
 from pydantic import BaseModel
+from enum import Enum
 
-# Chapter Schemas
+class LanguageEnum(str, Enum):
+    ENGLISH = "english"
+    HINDI = "hindi"
+
 class ChapterBase(BaseModel):
     number: int
+    language: LanguageEnum
     title: str
     introduction: str
 
@@ -16,9 +18,9 @@ class Chapter(ChapterBase):
     class Config:
         orm_mode = True
 
-# Verse Schemas
 class VerseBase(BaseModel):
     chapter_number: int
+    language: LanguageEnum
     number: int
     sanskrit_shloka: str
     transliteration: str
@@ -30,6 +32,5 @@ class VerseCreate(VerseBase):
 
 class Verse(VerseBase):
     id: int
-
     class Config:
         orm_mode = True

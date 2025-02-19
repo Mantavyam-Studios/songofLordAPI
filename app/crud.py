@@ -1,22 +1,17 @@
-# This file Adds functions for DB operations (Create, Read, Update, Delete).
-# app/crud.py
-
+# This file Adds functions for DB operations (Create, Read, Update, Delete)
 from sqlalchemy.future import select
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.models import Chapter, Verse
+from app.models import Chapter, Verse, LanguageEnum
 
-# Add Chapter remains mostly the same
-async def add_chapter(db: AsyncSession, number: int, title: str, introduction: str):
-    chapter = Chapter(number=number, title=title, introduction=introduction)
+async def add_chapter(db: AsyncSession, number: int, language: LanguageEnum, title: str, introduction: str):
+    chapter = Chapter(number=number, language=language, title=title, introduction=introduction)
     db.add(chapter)
     await db.commit()
     return chapter
 
-# Updated Add Verse: Use chapter_number instead of chapter_id.
-async def add_verse(db: AsyncSession, chapter_number: int, number: int,
-                    sanskrit_shloka: str, transliteration: str, translation: str,
-                    commentary: str):
-    verse = Verse(chapter_number=chapter_number, number=number,
+async def add_verse(db: AsyncSession, chapter_number: int, language: LanguageEnum, number: int,
+                    sanskrit_shloka: str, transliteration: str, translation: str, commentary: str):
+    verse = Verse(chapter_number=chapter_number, language=language, number=number,
                   sanskrit_shloka=sanskrit_shloka,
                   transliteration=transliteration,
                   translation=translation,
@@ -25,12 +20,10 @@ async def add_verse(db: AsyncSession, chapter_number: int, number: int,
     await db.commit()
     return verse
 
-# Get Chapters
-async def get_chapters(db: AsyncSession):
-    result = await db.execute(select(Chapter))
+async def get_chapters(db: AsyncSession, language: LanguageEnum):
+    result = await db.execute(select(Chapter).where(Chapter.language == language))
     return result.scalars().all()
 
-# Update query for getting verses by chapter:
-async def get_verses_by_chapter(db: AsyncSession, chapter_number: int):
-    result = await db.execute(select(Verse).where(Verse.chapter_number == chapter_number))
+async def get_verses_by_chapter(db: AsyncSession, chapter_number: int, language: LanguageEnum):
+    result = await db.execute(select(Verse).where(Verse.chapter_number == chapter_number, Verse.language == language))
     return result.scalars().all()

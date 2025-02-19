@@ -1,1 +1,4 @@
 # This file ignores files 
+.env
+.DS_store
+venv/
